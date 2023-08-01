@@ -14,6 +14,27 @@ def create_gmail_service():
     creds = None
     if os.path.exists(credentials_filename):
         creds, _ = google.auth.load_credentials_from_file(credentials_filename,SCOPES)
+
+    # checking if credentials are not valid or expired, get new credentials
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = google.auth.default(scopes=SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for future use
+        with open(credentials_filename, 'w') as f:
+            f.write(creds.to_json())
+    # We are Building the Gmail API service
+    service = build('gmail','v1', credentials=creds)
+    return service
+
+# Defining the first function to send_email
+def send_email(service, to_email, subject, body):
+    message = f'From: your_email@gmail.com\nTo:{to_email}\nSubject: {subject}\n\n{body}'
+    raw_message = base64.urlsafe_b64decode(message.encode()).decode()
+    service.users().messages().send(userId='me',body={'raw':raw_message}).execute()
+
 # # Step 2: we are setting up an connection to our email server
 # smtp = smtplib.SMTP('smtp.gmail.com',587)
 # smtp.ehlo()
