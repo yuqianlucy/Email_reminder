@@ -1,69 +1,102 @@
-# # # Import the require libirary
+# IMporting the require library
 import os
-import base64
-import google.auth
-from googleapiclient.discovery import build
-from google.auth.transport.requests import Request
+from  email.message import EmailMessage
+import ssl
+import smtplib
+# Intialized few varibale for email senting
+email_sender = 'yuqianlucy@gmail.com'
+email_password = os.environ("EMAIL_PASSWORD")
+email_receiver='yuqianlucy@gmail.com'
 
-# We are creating an function to create gmail service
-def create_gmail_service():
-    SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
+#defining the subject
+subject ='Check out the email reminder'
+body = """
+Starting to test whether we are able to sent email successfully through python.
+"""
 
-    # We are Loading the credentials from the JSON file obtain from the Google API Console
-    credentials_filename = 'credentials.json'
-    creds = None
-    if os.path.exists(credentials_filename):
-        creds, _ = google.auth.load_credentials_from_file(credentials_filename,SCOPES)
+# declare EMailMessage object
+em = EmailMessage()
+em['From'] = email_sender
+em['To'] = email_receiver
+em['Subject'] = subject
+# We are taking care of the body
+em.set_content(body)
 
-    # checking if credentials are not valid or expired, get new credentials
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = google.auth.default(scopes=SCOPES)
-            creds = flow.run_local_server()
-        # Save the credentials for future use
-        with open(credentials_filename, 'w') as f:
-            f.write(creds.to_json())
-    # We are Building the Gmail API service
-    service = build('gmail','v1', credentials=creds)
-    return service
+# taking care of the security
+context = ssl.create_default_context()
 
-# Defining the first function to send_email
-def send_email(service, to_email, subject, body):
-    message = f'From: your_email@gmail.com\nTo:{to_email}\nSubject: {subject}\n\n{body}'
-    raw_message = base64.urlsafe_b64decode(message.encode()).decode()
-    # using an try block to test whether email are senting successfully
-
-    try:
-        service.users().messages().send(userId='me',body={'raw':raw_message}).execute()
-        # if email are senting successfully, we are printing message to show
-        print("Email sent successfully!")
-    # taking care of the exception block
-    except Exception as e:
-        # Sorry we are failing to sent email
-        print(f"Failed to send email: {e}")
+# using smtplib to sent the email
+with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
+    smtp.login(email_sender,email_password)
+    smtp.sentmail(email_sender,email_receiver,em.as_string())
 
 
+# # # # Import the require libirary
+# import os
+# import base64
+# import google.auth
+# from googleapiclient.discovery import build
+# from google.auth.transport.requests import Request
 
-# defining the main function
-def main():
-    # defining the recipent_email
-    # Using the personal email to check
-    recipient_email = 'yuqianlucy@gmail.com'
-    reminder_subject = 'Reminder: Follow Up'
-    reminder_body = 'This is a friendly reminder to follow up on the task.'
+# # We are creating an function to create gmail service
+# def create_gmail_service():
+#     SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
-    # Create the Gmail API service
-    service = create_gmail_service()
+#     # We are Loading the credentials from the JSON file obtain from the Google API Console
+#     credentials_filename = 'credentials.json'
+#     creds = None
+#     if os.path.exists(credentials_filename):
+#         creds, _ = google.auth.load_credentials_from_file(credentials_filename,SCOPES)
 
-    # send the email
-    send_email(service, recipient_email, reminder_subject,reminder_body)
+#     # checking if credentials are not valid or expired, get new credentials
+#     if not creds or not creds.valid:
+#         if creds and creds.expired and creds.refresh_token:
+#             creds.refresh(Request())
+#         else:
+#             flow = google.auth.default(scopes=SCOPES)
+#             creds = flow.run_local_server()
+#         # Save the credentials for future use
+#         with open(credentials_filename, 'w') as f:
+#             f.write(creds.to_json())
+#     # We are Building the Gmail API service
+#     service = build('gmail','v1', credentials=creds)
+#     return service
+
+# # Defining the first function to send_email
+# def send_email(service, to_email, subject, body):
+#     message = f'From: your_email@gmail.com\nTo:{to_email}\nSubject: {subject}\n\n{body}'
+#     raw_message = base64.urlsafe_b64decode(message.encode()).decode()
+#     # using an try block to test whether email are senting successfully
+
+#     try:
+#         service.users().messages().send(userId='me',body={'raw':raw_message}).execute()
+#         # if email are senting successfully, we are printing message to show
+#         print("Email sent successfully!")
+#     # taking care of the exception block
+#     except Exception as e:
+#         # Sorry we are failing to sent email
+#         print(f"Failed to send email: {e}")
+
+
+
+# # defining the main function
+# def main():
+#     # defining the recipent_email
+#     # Using the personal email to check
+#     recipient_email = 'yuqianlucy@gmail.com'
+#     reminder_subject = 'Reminder: Follow Up'
+#     reminder_body = 'This is a friendly reminder to follow up on the task.'
+
+#     # Create the Gmail API service
+#     service = create_gmail_service()
+
+#     # send the email
+#     send_email(service, recipient_email, reminder_subject,reminder_body)
     
 
-# Defining the entry point
-if __name__ == "__mian__":
-    main()
+# # Defining the entry point
+# if __name__ == "__mian__":
+#     main()
 # # Step 2: we are setting up an connection to our email server
 # smtp = smtplib.SMTP('smtp.gmail.com',587)
 # smtp.ehlo()
@@ -121,8 +154,8 @@ if __name__ == "__mian__":
 #     return msg
 
 # defining the main function to call the subfunction
-def main():
-    pass
+# def main():
+#     pass
     # # We are Calling the message function
     # msg = message("Good", "Hi there!",
     #               r"C:\Users\yuqia\OneDrive\Desktop\6.PNG",
