@@ -33,7 +33,18 @@ def create_gmail_service():
 def send_email(service, to_email, subject, body):
     message = f'From: your_email@gmail.com\nTo:{to_email}\nSubject: {subject}\n\n{body}'
     raw_message = base64.urlsafe_b64decode(message.encode()).decode()
-    service.users().messages().send(userId='me',body={'raw':raw_message}).execute()
+    # using an try block to test whether email are senting successfully
+
+    try:
+        service.users().messages().send(userId='me',body={'raw':raw_message}).execute()
+        # if email are senting successfully, we are printing message to show
+        print("Email sent successfully!")
+    # taking care of the exception block
+    except Exception as e:
+        # Sorry we are failing to sent email
+        print(f"Failed to send email: {e}")
+
+
 
 # defining the main function
 def main():
@@ -47,8 +58,8 @@ def main():
     service = create_gmail_service()
 
     # send the email
-    send_email(service, recipient_email, reminder_body)
-
+    send_email(service, recipient_email, reminder_subject,reminder_body)
+    
 
 # Defining the entry point
 if __name__ == "__mian__":
