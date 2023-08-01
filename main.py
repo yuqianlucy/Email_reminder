@@ -38,7 +38,8 @@ def send_email(service, to_email, subject, body):
 # defining the main function
 def main():
     # defining the recipent_email
-    recipient_email = 'recipient@example.com'
+    # Using the personal email to check
+    recipient_email = 'yuqianlucy@gmail.com'
     reminder_subject = 'Reminder: Follow Up'
     reminder_body = 'This is a friendly reminder to follow up on the task.'
 
