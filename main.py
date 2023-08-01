@@ -10,6 +10,10 @@ def create_gmail_service():
     SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
     # We are Loading the credentials from the JSON file obtain from the Google API Console
+    credentials_filename = 'credentials.json'
+    creds = None
+    if os.path.exists(credentials_filename):
+        creds, _ = google.auth.load_credentials_from_file(credentials_filename,SCOPES)
 # # Step 2: we are setting up an connection to our email server
 # smtp = smtplib.SMTP('smtp.gmail.com',587)
 # smtp.ehlo()
