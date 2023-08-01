@@ -35,6 +35,23 @@ def send_email(service, to_email, subject, body):
     raw_message = base64.urlsafe_b64decode(message.encode()).decode()
     service.users().messages().send(userId='me',body={'raw':raw_message}).execute()
 
+# defining the main function
+def main():
+    # defining the recipent_email
+    recipient_email = 'recipient@example.com'
+    reminder_subject = 'Reminder: Follow Up'
+    reminder_body = 'This is a friendly reminder to follow up on the task.'
+
+    # Create the Gmail API service
+    service = create_gmail_service()
+
+    # send the email
+    send_email(service, recipient_email, reminder_body)
+
+
+# Defining the entry point
+if __name__ == "__mian__":
+    main()
 # # Step 2: we are setting up an connection to our email server
 # smtp = smtplib.SMTP('smtp.gmail.com',587)
 # smtp.ehlo()
