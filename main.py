@@ -1,82 +1,87 @@
-# # Import the require libirary
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
-from email.mime.application import MIMEApplication
-from email.mime.multipart import MIMEMultipart
-import smtplib
+# # # Import the require libirary
 import os
+import base64
+import google.auth
+from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
 
-# Step 2: we are setting up an connection to our email server
-smtp = smtplib.SMTP('smtp.gmail.com',587)
-smtp.ehlo()
-smtp.starttls()
-smtp.login('YourMail@gmail.com','Your Password')
+# We are creating an function to create gmail service
+def create_gmail_service():
+    SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
-# Step 3: send the email message 'msg' to the owner
-def message(subject="Python Notification",
-            text="", img=None,
-            attachment=None):
-    # build message contnets
-    msg = MIMEApplication()
-    # we are adding Subject
-    msg['Subject']=subject
-    # Add text contents
-    msg.attach(MIMEText(text))
-    # We are checking if we have anything
-    # given the img parameter
-    if img is not None:
-        # We are Checking whether we have the lists of images or not!
-        if type(img) is not list:
-            # if it isn't a list, make it one
-            img=[img]
-        # then, we are iterate through the list
-        for one_img in img:
-            # We are reading the image binary data
-            img_data = open(one_img, 'rb').read()
-            # We are Attaching the image data to MIMEMultipart
-            # then, using MIMEImage, add the given filename
-            msg.attach(MIMEImage(img_data,
-                                 name=os.path.basename(one_img)))
-        # We also do the same for
-        # attachment 
-    if attachment is not None:
-        # Check whether we have 
-        # lists of attachemnts or not
-        if type(attachment) is not list:
-            # If it isn't a list, make it one
-            attachment = [attachment]
-        # going through for loop
-        for one_attachment in attachment:
-            # opening in reading binary 
-            with open(one_attachment,'rb') as f:
-                # We are Read in the attachemnt
-                # We are using MIMEApplication
-                file = MIMEApplication(
-                    f.read(),
-                    name=os.path.basename(one_attachment)
-                )
-            file['Content-Disposition'] = f'attachmnt;\
-                filename="{os.path.basename(one_attachment)}"'
-            # lastly, we are Adding the attachemnt to our message object
-            msg.attach(file)
-    # We are returning the message   
-    return msg
+    # We are Loading the credentials from the JSON file obtain from the Google API Console
+# # Step 2: we are setting up an connection to our email server
+# smtp = smtplib.SMTP('smtp.gmail.com',587)
+# smtp.ehlo()
+# smtp.starttls()
+# smtp.login('YourMail@gmail.com','Your Password')
+
+# # Step 3: send the email message 'msg' to the owner
+# def message(subject="Python Notification",
+#             text="", img=None,
+#             attachment=None):
+#     # build message contnets
+#     msg = MIMEApplication()
+#     # we are adding Subject
+#     msg['Subject']=subject
+#     # Add text contents
+#     msg.attach(MIMEText(text))
+#     # We are checking if we have anything
+#     # given the img parameter
+#     if img is not None:
+#         # We are Checking whether we have the lists of images or not!
+#         if type(img) is not list:
+#             # if it isn't a list, make it one
+#             img=[img]
+#         # then, we are iterate through the list
+#         for one_img in img:
+#             # We are reading the image binary data
+#             img_data = open(one_img, 'rb').read()
+#             # We are Attaching the image data to MIMEMultipart
+#             # then, using MIMEImage, add the given filename
+#             msg.attach(MIMEImage(img_data,
+#                                  name=os.path.basename(one_img)))
+#         # We also do the same for
+#         # attachment 
+#     if attachment is not None:
+#         # Check whether we have 
+#         # lists of attachemnts or not
+#         if type(attachment) is not list:
+#             # If it isn't a list, make it one
+#             attachment = [attachment]
+#         # going through for loop
+#         for one_attachment in attachment:
+#             # opening in reading binary 
+#             with open(one_attachment,'rb') as f:
+#                 # We are Read in the attachemnt
+#                 # We are using MIMEApplication
+#                 file = MIMEApplication(
+#                     f.read(),
+#                     name=os.path.basename(one_attachment)
+#                 )
+#             file['Content-Disposition'] = f'attachmnt;\
+#                 filename="{os.path.basename(one_attachment)}"'
+#             # lastly, we are Adding the attachemnt to our message object
+#             msg.attach(file)
+#     # We are returning the message   
+#     return msg
 
 # defining the main function to call the subfunction
 def main():
-    # We are Calling the message function
-    msg = message("Good", "Hi there!",
-                  r"C:\Users\yuqia\OneDrive\Desktop\6.PNG",
-                  r"C:\Users\yuqia\OneDrive\Desktop\hello.txt")
-    # Make a list of emails, right now is in testing phase, we are only doing one
-    to = ["yuqianlucy@gmail.com"]
+    pass
+    # # We are Calling the message function
+    # msg = message("Good", "Hi there!",
+    #               r"C:\Users\yuqia\OneDrive\Desktop\6.PNG",
+    #               r"C:\Users\yuqia\OneDrive\Desktop\hello.txt")
+    # # Make a list of emails, right now is in testing phase, we are only doing one
+    # to = ["yuqianlucy@gmail.com"]
 
-    # We arw Providing some data to the sendmail function!
-    smtp.sendmail(from_addr="yuqianlucy@gmail.com",
-                  to_addrs=to, msg=msg.as_string())
+    # # We arw Providing some data to the sendmail function!
+    # smtp.sendmail(from_addr="yuqianlucy@gmail.com",
+    #               to_addrs=to, msg=msg.as_string())
     
-    # Finally, we need to close the connection
-    smtp.quit()
+    # # Finally, we need to close the connection
+    # smtp.quit()
            
 
 
@@ -145,6 +150,3 @@ def main():
 
 # Keep the program running to execute schedues tasks
 
-# # Entry point of the program
-# if __name__ =="__main__":
-#     main()
