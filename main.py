@@ -5,7 +5,7 @@ import ssl
 import smtplib
 # Intialized few varibale for email senting
 email_sender = 'yuqianlucy@gmail.com'
-email_password = os.environ("EMAIL_PASSWORD")
+email_password = os.environ.get("EMAIL_PASSWORD")
 email_receiver='yuqianlucy@gmail.com'
 
 #defining the subject
