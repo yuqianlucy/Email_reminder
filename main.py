@@ -22,7 +22,6 @@ def main():
 
 # entry point of the function
 if __name__ == "__main__":
-    
     main()
 
 
