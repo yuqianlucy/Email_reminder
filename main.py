@@ -4,9 +4,9 @@ from  email.message import EmailMessage
 import ssl
 import smtplib
 # Intialized few varibale for email senting
-email_sender = 'yuqianlucy@gmail.com'
+email_sender = 'lucy.wang@soundofhope.org'
 email_password = os.environ.get("EMAIL_PASSWORD")
-email_receiver='yuqianlucy@gmail.com'
+email_receiver='lucy.wang@soundofhope.org'
 
 #defining the subject
 subject ='Check out the email reminder'
@@ -26,7 +26,7 @@ em.set_content(body)
 context = ssl.create_default_context()
 
 # using smtplib to sent the email
-with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
+with smtplib.SMTP_SSL('smtp.gmail.com',456,context=context) as smtp:
     smtp.login(email_sender,email_password)
     smtp.sentmail(email_sender,email_receiver,em.as_string())
 
